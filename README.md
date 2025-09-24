@@ -78,25 +78,48 @@ endmodule
 
 ### JK Flip-Flop (Non Blocking)
 ```verilog
-module jk_ff (
-    input wire J, K, clk,
-    output reg Q
-);
-    always @(posedge clk) begin
-
-
-
+module jk_ff(J,K,clk,rst,Q);
+input J,K,clk,rst;
+output reg Q;
+always @(posedge clk)
+begin
+if (rst==1) Q<=1'b0;
+else if  (J==0 && K==0) 
+Q<=Q;
+else if (J==0 && K==1) 
+Q<=1'b0;
+else if (J==1 && K==0) 
+Q<=1'b1;
+else 
+Q<= ~Q;
+end
 endmodule
 ```
 ### JK Flip-Flop Test bench 
 ```verilog
-
-
-
+`timescale 1ns / 1ps
+module tb_jk_ff;
+reg J,K,clk,rst;
+wire Q;
+jk_ff uut(J,K,clk,rst,Q);
+always #5 clk=~clk;
+initial begin
+clk=0; J=0; K=0; rst=1;
+#10 rst=0;
+#10 J=1; K=0;
+#10 J=0; K=0;
+#10 J=0; K=1;
+#10 J=1; K=1;
+#10 J=0; K=0;
+#20 $finish;
+end
+endmodule
 ```
 #### SIMULATION OUTPUT
 
-------- paste the output here -------
+![image](https://github.com/user-attachments/assets/15f22cef-d440-48ef-84fc-85e062f59df2)
+
+
 ---
 ### D Flip-Flop (Non Blocking)
 ```verilog
