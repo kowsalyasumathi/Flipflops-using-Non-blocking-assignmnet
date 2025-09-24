@@ -141,17 +141,44 @@ endmodule
 ### T Flip-Flop (Non Blocking)
 ```verilog
 
+module t_ff(clk,rst,T,Q);
+input clk,rst,T;
+output reg Q;
+always @ (posedge clk)
+begin
+if (rst==1)
+Q<=0;
+else if (T==0)
+Q<=Q;
+else 
+Q<=~Q;
+end
+endmodule
 ```
 ### T Flip-Flop Test bench 
 ```verilog
+`timescale 1ns / 1ps
 
-
+module t_tb_ff;
+reg clk,rst,T;
+wire Q;
+t_ff uut (clk,rst,T,Q);
+always #5 clk=~clk;
+initial
+begin
+clk=0; T=0; rst=1;
+#10 rst=0;
+T=0;
+#10 T=1;
+$finish;
+end
+endmodule
 
 ```
 
 #### SIMULATION OUTPUT
 
-------- paste the output here -------
+![image](https://github.com/user-attachments/assets/c7dbe488-4e99-49fd-a471-2fb3d1d1dfed)
 
 ---
 
